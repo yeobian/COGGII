@@ -1,456 +1,373 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COGGI - Interactive Project Brief</title>
+    <title>COGGI: An Interactive Proposal Overview</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: "Corporate Calm" - A professional and clean palette using shades of slate gray, a calm blue, and a gentle teal for accents, grounded in a warm off-white background. This scheme conveys technological sophistication, trustworthiness, and approachability, fitting for a Capgemini-led healthcare solution. -->
-    <!-- Application Structure Plan: The application is structured as a narrative, top-down, single-page dashboard. It starts with the core problem ('The Communication Crisis'), introduces the solution ('Introducing COGGI'), details the key innovation ('The Digital Twin'), explains the technology ('Architecture & Features'), compares it to the market ('Competitive Landscape'), and concludes with the strategic vision ('Path to Impact'). Navigation is facilitated by a sticky header. This thematic, scrolling structure allows stakeholders to quickly grasp the project's value proposition, from the "why" to the "how," without being constrained by the linear format of the original document. Interactive elements like clickable cards and charts are used to reveal deeper information on demand, keeping the initial view clean and focused. -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony Neutrals -->
+    <!-- Application Structure Plan: The application is structured as a persuasive narrative, guiding the user from the problem to the solution and its justification. It starts with the "Why" (The Crisis), moves to "What's Wrong" (Current Tool Failures), then presents "The How" (The COGGI Solution), followed by "With Whom" (The Process), "Why Us, Why Now" (ARPA-H Alignment), and "The Who" (The Team). This thematic flow is more engaging than the report's linear structure and uses interactive elements to break down complex information, enhancing user understanding and exploration. -->
     <!-- Visualization & Content Choices: 
-        - The Silent Epidemic: Goal: Inform/Compare. Method: Donut chart (Chart.js) to show the proportion of ASD individuals who are minimally verbal. Bar chart (Chart.js) for comparing AAC vs. natural speech speed. Interaction: Tooltips on hover provide exact figures. Justification: Visualizes the scale of the problem more impactfully than text alone.
-        - Market Growth: Goal: Show Change/Trend. Method: Bar chart (Chart.js) showing projected market growth. Interaction: Tooltips. Justification: Clearly illustrates the growing market opportunity.
-        - Hybrid Architecture: Goal: Organize/Explain. Method: Diagram built with HTML/Tailwind CSS. Interaction: None, static diagram for clarity. Justification: Visually breaks down a complex technical concept into understandable components (Edge, Cloud, Sync), which is more effective than a dense paragraph.
-        - DToU Concept: Goal: Explain. Method: Interactive cards using HTML/CSS/JS. Interaction: Clicking a component (e.g., 'Communication History') reveals a short explanation. Justification: Makes a complex abstract concept tangible and explorable.
-        - Competitive Comparison: Goal: Compare. Method: A structured HTML table. Interaction: Highlighting COGGI's column on hover. Justification: Provides a direct, at-a-glance comparison of key features against competitors.
+        - The Crisis: Goal: Inform/Impact. Viz: Bar chart (Chart.js) for depression stats. Interaction: Hover tooltips. Justification: Clear visual for a key statistic.
+        - AAC Comparison: Goal: Compare. Viz: Interactive button-driven content cards. Interaction: Click to filter features. Justification: More engaging and focused than a static table.
+        - COGGI Pillars: Goal: Organize/Explain. Viz: Clickable cards. Interaction: Click to expand. Justification: Chunks information for better digestibility.
+        - Co-Design Process: Goal: Show flow. Viz: HTML/CSS diagram. Interaction: Hover effects. Justification: Intuitive visual for a process without using forbidden SVG.
+        - Heilmeier Catechism: Goal: Organize Q&A. Viz: Native HTML accordion. Interaction: Click to expand. Justification: Accessible, standard UX pattern for FAQs.
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
             background-color: #F8F7F4;
-            color: #334155;
+            color: #4A4A4A;
         }
-        .nav-link {
-            transition: color 0.3s, border-bottom-color 0.3s;
-            border-bottom: 2px solid transparent;
-        }
-        .nav-link:hover, .nav-link.active {
-            color: #3B82F6;
-            border-bottom-color: #3B82F6;
-        }
-        .chart-container {
-            position: relative;
-            margin: auto;
-            height: 300px;
-            max-height: 300px;
-            width: 100%;
-            max-width: 500px;
-        }
+        .bg-primary { background-color: #F8F7F4; }
+        .bg-secondary { background-color: #FFFFFF; }
+        .text-accent { color: #4A90E2; }
+        .bg-accent { background-color: #4A90E2; }
+        .border-accent { border-color: #4A90E2; }
+        .text-warm-accent { color: #D0A98F; }
+        .bg-warm-accent { background-color: #D0A98F; }
         .section-title {
             font-size: 2.25rem;
-            font-weight: 700;
-            color: #1E293B;
-            margin-bottom: 1rem;
+            font-weight: 800;
+            line-height: 2.5rem;
         }
         .section-subtitle {
             font-size: 1.125rem;
-            color: #475569;
-            max-width: 800px;
-            margin: 0 auto 3rem auto;
+            line-height: 1.75rem;
+            color: #5f5f5f;
         }
-        .card {
-            background-color: white;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
         }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        details > summary {
+            list-style: none;
         }
-        .pill {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+        details[open] summary .arrow-down {
+            transform: rotate(180deg);
         }
     </style>
 </head>
-<body class="antialiased">
+<body class="bg-primary">
 
-    <!-- Header & Navigation -->
-    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
-        <nav class="container mx-auto px-4 lg:px-6">
-            <div class="flex justify-between items-center py-4">
-                <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg">C</div>
-                    <h1 class="text-2xl font-bold text-slate-800">COGGI</h1>
-                    <span class="hidden md:inline-block bg-teal-100 text-teal-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Project Brief</span>
-                </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#problem" class="nav-link">The Crisis</a>
-                    <a href="#solution" class="nav-link">Solution</a>
-                    <a href="#innovation" class="nav-link">Innovation</a>
-                    <a href="#architecture" class="nav-link">How It Works</a>
-                    <a href="#impact" class="nav-link">Impact</a>
-                </div>
-                <div class="md:hidden">
-                    <button id="menu-btn" class="text-slate-600 focus:outline-none">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                    </button>
-                </div>
-            </div>
-            <div id="mobile-menu" class="hidden md:hidden pb-4">
-                <a href="#problem" class="block py-2 px-4 text-sm nav-link">The Crisis</a>
-                <a href="#solution" class="block py-2 px-4 text-sm nav-link">Solution</a>
-                <a href="#innovation" class="block py-2 px-4 text-sm nav-link">Innovation</a>
-                <a href="#architecture" class="block py-2 px-4 text-sm nav-link">How It Works</a>
-                <a href="#impact" class="block py-2 px-4 text-sm nav-link">Impact</a>
-            </div>
-        </nav>
-    </header>
-
-    <main class="container mx-auto px-4 lg:px-6 py-12">
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
 
         <!-- Hero Section -->
-        <section class="text-center py-16">
-            <h1 class="text-4xl md:text-6xl font-extrabold text-slate-800 leading-tight">
-                A Personalized AI to <span class="text-blue-600">Restore Identity</span>
+        <section id="hero" class="text-center mb-20 md:mb-32">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-4">
+                <span class="text-warm-accent">COGGI</span>
             </h1>
-            <p class="mt-4 text-lg md:text-xl text-slate-600 max-w-3xl mx-auto">
-                Introducing COGGI: A revolutionary assistive communication platform by Capgemini, designed to move beyond words and empower individuals with cognitive disabilities to express their true, authentic selves.
+            <p class="text-xl md:text-2xl font-medium text-gray-700 max-w-3xl mx-auto">
+                A proposal for a revolutionary adaptive, emotionally intelligent communication partner.
             </p>
-            <div class="mt-8 flex justify-center space-x-4">
-                <a href="#solution" class="bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-blue-700 transition">Discover the Solution</a>
-            </div>
         </section>
 
-        <!-- Section 1: The Communication Crisis -->
-        <section id="problem" class="py-16 text-center">
-            <h2 class="section-title">The Silent Epidemic</h2>
-            <p class="section-subtitle">
-                Current Augmentative and Alternative Communication (AAC) technology has stagnated, failing millions with tools that are slow, impersonal, and prohibitively expensive. This isn't just a technical failure; it's a public health crisis that fuels social isolation and diminishes quality of life.
-            </p>
+        <!-- The Crisis Section -->
+        <section id="crisis" class="mb-20 md:mb-32">
+            <div class="text-center max-w-3xl mx-auto">
+                <h2 class="section-title mb-4">The Silent Epidemic</h2>
+                <p class="section-subtitle mb-12">
+                    Millions of Americans with cognitive disabilities face a profound communication crisis. This isn't just about words; it's a barrier to expressing thoughts, needs, and emotions, leading to social isolation and a diminished quality of life.
+                </p>
+            </div>
             <div class="grid md:grid-cols-2 gap-8 items-center">
-                <div class="card text-left">
-                    <h3 class="text-xl font-bold mb-4 text-slate-800">The Scope of the Challenge</h3>
-                    <p class="mb-4 text-slate-600">A significant portion of individuals with common neurological conditions face profound communication challenges. For instance, within the large population diagnosed with Autism Spectrum Disorder (ASD), a substantial number remain minimally verbal for life.</p>
-                    <div class="chart-container">
-                        <canvas id="asdChart"></canvas>
-                    </div>
-                    <p class="text-xs text-center text-slate-500 mt-2">Source: CDC, Communication interventions for autism spectrum disorder in minimally verbal children - PMC.</p>
+                <div class="bg-secondary p-8 rounded-xl shadow-sm">
+                    <h3 class="text-xl font-bold mb-2">The Human Cost of Disconnection</h3>
+                    <p class="mb-4">The inability to communicate authentically has severe, cascading consequences across every facet of life.</p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-accent mr-3 mt-1">&#10003;</span>
+                            <span><strong>Poorer Health Outcomes:</strong> Higher rates of chronic conditions and adverse medical events.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-accent mr-3 mt-1">&#10003;</span>
+                            <span><strong>Social & Economic Disadvantage:</strong> Lower rates of employment and marriage.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-accent mr-3 mt-1">&#10003;</span>
+                            <span><strong>Profound Social Exclusion:</strong> Loss of friendships and a decline in social activities.</span>
+                        </li>
+                    </ul>
                 </div>
-                <div class="card text-left">
-                    <h3 class="text-xl font-bold mb-4 text-slate-800">The Debilitating Latency</h3>
-                    <p class="mb-4 text-slate-600">The gap between the speed of natural conversation and current AAC tools is vast. This delay makes fluid, real-time interaction nearly impossible, leading to frustration and disconnection.</p>
+                <div class="bg-secondary p-6 rounded-xl shadow-sm">
+                    <h3 class="text-xl font-bold text-center mb-2">A Link to Mental Health</h3>
+                    <p class="text-center text-gray-600 mb-4">The constant struggle to be understood takes a heavy toll. For instance, a significant portion of individuals with aphasia experience depression.</p>
                     <div class="chart-container">
-                        <canvas id="speedChart"></canvas>
+                        <canvas id="depressionChart"></canvas>
                     </div>
-                    <p class="text-xs text-center text-slate-500 mt-2">Source: External challenges for individuals who need or use AAC - Taylor & Francis Online.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Section 2: The Solution -->
-        <section id="solution" class="py-16 bg-white rounded-2xl">
-            <div class="text-center">
-                <h2 class="section-title">Introducing COGGI</h2>
-                <p class="section-subtitle">
-                    COGGI is Capgemini's proposed paradigm shift. It's not just another AAC app; it's a personalized, AI-powered communication partner designed for speed, emotional resonance, and deep user engagement.
+        <!-- AAC Failures Section -->
+        <section id="failures" class="mb-20 md:mb-32">
+            <div class="text-center max-w-3xl mx-auto">
+                <h2 class="section-title mb-4">A Landscape of Incrementalism</h2>
+                <p class="section-subtitle mb-8">
+                    Current Augmentative and Alternative Communication (AAC) tools are built on an outdated paradigm. They are often slow, cognitively draining, and emotionally sterile, leading to high rates of user frustration and device abandonment.
+                </p>
+                <p class="section-subtitle mb-12">
+                    Click a feature below to see how current tools stack up against the proposed COGGI solution.
                 </p>
             </div>
-            <div class="grid md:grid-cols-3 gap-8 mt-12 text-center">
-                <div class="p-6">
-                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 text-blue-600 mx-auto mb-4">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">Predictive & Fast</h3>
-                    <p class="text-slate-600">Moves beyond word prediction to anticipate user intent, suggesting full, context-aware phrases to enable communication at near-conversational speed.</p>
+            <div id="comparison-tool" class="w-full max-w-5xl mx-auto">
+                <div id="comparison-buttons" class="flex flex-wrap justify-center gap-3 mb-8">
                 </div>
-                <div class="p-6">
-                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-teal-100 text-teal-600 mx-auto mb-4">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">Emotionally Resonant</h3>
-                    <p class="text-slate-600">Integrates emotionally expressive voice synthesis and non-verbal cues, allowing users to convey not just what they think, but how they feel.</p>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 text-indigo-600 mx-auto mb-4">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                    </div>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2">Deeply Personal</h3>
-                    <p class="text-slate-600">Features customizable "COGGI Companion" avatars (animals, characters) to foster user engagement, ownership, and a positive interactive experience.</p>
+                <div id="comparison-cards" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 </div>
             </div>
         </section>
-        
-        <!-- Section 3: The Innovation -->
-        <section id="innovation" class="py-16 text-center">
-            <h2 class="section-title">The Core Innovation: The Digital Twin</h2>
-            <p class="section-subtitle">
-                The technology that elevates COGGI is the Digital Twin of the User (DToU). It's a dynamic, learning model of the user's entire communicative identity. It learns not just words, but personality, relationships, and context to provide truly authentic communication support.
-            </p>
-            <div class="max-w-4xl mx-auto">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="dtou-card card text-center cursor-pointer" data-info="The DToU analyzes the user's complete communication history to learn their unique phrasing, vocabulary, and conversational flow.">
-                        <h4 class="font-bold text-slate-700">Communication History</h4>
-                    </div>
-                     <div class="dtou-card card text-center cursor-pointer" data-info="It learns the user's specific vocabulary and grammatical patterns, adapting to their personal style rather than imposing a generic one.">
-                        <h4 class="font-bold text-slate-700">Lexical Patterns</h4>
-                    </div>
-                    <div class="dtou-card card text-center cursor-pointer" data-info="The DToU distinguishes between different conversational partners (e.g., family vs. therapist) and suggests appropriate language for each.">
-                        <h4 class="font-bold text-slate-700">Social Context</h4>
-                    </div>
-                    <div class="dtou-card card text-center cursor-pointer" data-info="When a user corrects a suggestion, the DToU treats it as a powerful learning signal, rapidly improving its future accuracy.">
-                        <h4 class="font-bold text-slate-700">Correction Feedback</h4>
-                    </div>
-                </div>
-                <div id="dtou-info" class="mt-6 p-6 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg text-left min-h-[100px] flex items-center">
-                    <p class="text-blue-800">Click on a component above to learn more about how the Digital Twin creates a holistic model of the user.</p>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Section 4: Architecture -->
-        <section id="architecture" class="py-16 bg-slate-50 rounded-2xl">
-            <div class="text-center">
-                 <h2 class="section-title">How It Works: Hybrid Architecture</h2>
-                 <p class="section-subtitle">
-                    COGGI's performance and security are built on a robust Hybrid Cloud-Edge Architecture. This model balances real-time responsiveness on the user's device with powerful personalization in the cloud, ensuring a seamless, secure, and always-available experience.
+
+        <!-- The COGGI Solution Section -->
+        <section id="solution" class="mb-20 md:mb-32">
+            <div class="text-center max-w-3xl mx-auto">
+                <h2 class="section-title mb-4">The COGGI Solution</h2>
+                <p class="section-subtitle mb-12">
+                    COGGI proposes a new architecture for human-centric communication, built on three synergistic pillars that create an adaptive, authentic, and cognitively efficient experience.
                 </p>
             </div>
-            <div class="max-w-5xl mx-auto mt-12 grid md:grid-cols-3 gap-4 items-center text-center">
-                <!-- Edge Device -->
-                <div class="card p-6">
-                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-teal-100 text-teal-600 mx-auto mb-4">
-                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                    </div>
-                    <h3 class="font-bold text-lg text-slate-800">1. On-Device (Edge)</h3>
-                    <p class="text-slate-600 mt-2">Real-time prediction and user interaction happens locally on the smartphone or tablet. This guarantees low latency and offline functionality.</p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-secondary p-8 rounded-xl shadow-sm">
+                    <h3 class="text-2xl font-bold mb-3 text-warm-accent">1. Personalization Engine</h3>
+                    <p class="mb-4">An on-device "communication twin" that learns the user's unique linguistic style, humor, and syntax. It runs entirely on the user's device, ensuring privacy, speed, and offline functionality.</p>
                 </div>
-                <!-- Sync Arrow -->
-                <div class="text-slate-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                    <p class="text-sm font-semibold">Secure Sync</p>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16l-4-4m0 0l4-4m-4 4h18" /></svg>
+                <div class="bg-secondary p-8 rounded-xl shadow-sm">
+                    <h3 class="text-2xl font-bold mb-3 text-warm-accent">2. Emotional Intelligence</h3>
+                    <p class="mb-4">Moves beyond simple emotion labels to generate language with genuine nuance. The system suggests phrases that carry the desired emotional weight, enabling authentic affective communication.</p>
                 </div>
-
-                <!-- Cloud Backend -->
-                 <div class="card p-6">
-                    <div class="flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 text-indigo-600 mx-auto mb-4">
-                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
-                    </div>
-                    <h3 class="font-bold text-lg text-slate-800">2. HIPAA-Compliant Cloud</h3>
-                    <p class="text-slate-600 mt-2">The heavy lifting—training the DToU and fine-tuning AI models—is offloaded to a secure cloud backend, ensuring user data privacy and security.</p>
+                <div class="bg-secondary p-8 rounded-xl shadow-sm">
+                    <h3 class="text-2xl font-bold mb-3 text-warm-accent">3. Context Awareness</h3>
+                    <p class="mb-4">Uses on-device sensors (GPS, calendar) to anticipate needs and proactively surface relevant vocabulary in dynamic visual scenes, dramatically reducing the cognitive load of searching for words.</p>
                 </div>
             </div>
         </section>
 
-
-        <!-- Section 5: Path to Impact -->
-        <section id="impact" class="py-16 text-center">
-            <h2 class="section-title">The Path to Impact</h2>
-            <p class="section-subtitle">
-                Capgemini's strategy provides a credible, de-risked path from a validated prototype to a sustainable and accessible product. This is built on a deep understanding of the market, regulatory pathways, and our intrinsic capabilities as a global technology leader.
-            </p>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
-                <div class="card">
-                    <h3 class="font-bold text-lg mb-2 text-slate-800">Market Opportunity</h3>
-                    <p class="text-slate-600 mb-4">The AAC market is poised for significant expansion, growing from ~$2B to an estimated $5.2B by the early 2030s.</p>
-                     <div class="chart-container h-48 max-h-48">
-                        <canvas id="marketGrowthChart"></canvas>
+        <!-- Co-Design Section -->
+        <section id="process" class="mb-20 md:mb-32">
+            <div class="text-center max-w-3xl mx-auto">
+                <h2 class="section-title mb-4">A Framework for Inclusive Innovation</h2>
+                <p class="section-subtitle mb-12">
+                    A technology this personal must be built *with* its community, not just *for* it. COGGI is founded on a commitment to participatory co-design and a robust ethical framework.
+                </p>
+            </div>
+            <div class="bg-secondary p-8 rounded-xl shadow-sm">
+                <h3 class="text-xl font-bold text-center mb-8">The Co-Design Cycle</h3>
+                <div class="flex flex-col md:flex-row justify-around items-center text-center space-y-8 md:space-y-0">
+                    <div class="flex flex-col items-center">
+                        <div class="w-24 h-24 bg-accent/10 rounded-full flex items-center justify-center mb-3">
+                            <span class="text-3xl">🔍</span>
+                        </div>
+                        <h4 class="font-bold text-lg">Discovery</h4>
+                        <p class="max-w-xs text-sm text-gray-600">Understand real-world challenges via interviews and observation.</p>
+                    </div>
+                    <div class="text-accent text-3xl font-sans transform rotate-90 md:rotate-0">&rarr;</div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-24 h-24 bg-accent/10 rounded-full flex items-center justify-center mb-3">
+                            <span class="text-3xl">🤝</span>
+                        </div>
+                        <h4 class="font-bold text-lg">Co-Creation</h4>
+                        <p class="max-w-xs text-sm text-gray-600">Users and experts brainstorm and sketch ideas as equal partners.</p>
+                    </div>
+                     <div class="text-accent text-3xl font-sans transform rotate-90 md:rotate-0">&rarr;</div>
+                    <div class="flex flex-col items-center">
+                        <div class="w-24 h-24 bg-accent/10 rounded-full flex items-center justify-center mb-3">
+                            <span class="text-3xl">📱</span>
+                        </div>
+                        <h4 class="font-bold text-lg">In-Context Testing</h4>
+                        <p class="max-w-xs text-sm text-gray-600">Deploy and evaluate prototypes in the complexities of daily life.</p>
                     </div>
                 </div>
-                <div class="card">
-                    <h3 class="font-bold text-lg mb-2 text-slate-800">Regulatory Pathway</h3>
-                     <p class="text-slate-600">COGGI is positioned as a Class II Medical Device (SaMD), following a well-established 510(k) pathway using product code ILQ. This clear path minimizes regulatory risk.</p>
-                     <div class="mt-4 space-y-2">
-                        <span class="pill bg-green-100 text-green-800">FDA Class II</span>
-                        <span class="pill bg-green-100 text-green-800">510(k) Pathway</span>
-                     </div>
-                </div>
-                <div class="card">
-                    <h3 class="font-bold text-lg mb-2 text-slate-800">Reimbursement Strategy</h3>
-                    <p class="text-slate-600">To ensure accessibility, our strategy targets coverage under the existing HCPCS code E2511 for "Speech generating software," providing a direct route to reimbursement.</p>
-                    <div class="mt-4 space-y-2">
-                         <span class="pill bg-blue-100 text-blue-800">HCPCS E2511</span>
-                         <span class="pill bg-blue-100 text-blue-800">Broad Payer Access</span>
+                <div class="mt-10 border-t pt-6 grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-bold text-lg mb-2">Clinical Expertise</h4>
+                        <p class="text-gray-700">A board of Speech-Language Pathologists and Occupational Therapists will ground the technology in clinical best practice, ensuring it's a valid therapeutic tool.</p>
                     </div>
-                </div>
-                 <div class="card lg:col-span-3">
-                    <h3 class="font-bold text-lg mb-2 text-slate-800">The Capgemini Advantage</h3>
-                    <p class="text-slate-600">As a global leader in technology and consulting, Capgemini brings unparalleled scale, expertise, and resources to this project. We possess the in-house talent for AI and healthcare, the infrastructure for secure cloud deployment, and the experience to manage complex projects from conception to full-scale market delivery. This eliminates partnership risks inherent in smaller ventures and guarantees a robust path to achieving ARPA-H's mission of delivering high-impact health solutions for all.
-                    </p>
+                    <div>
+                        <h4 class="font-bold text-lg mb-2">Ethical Framework</h4>
+                        <p class="text-gray-700">Built on a foundation of user trust, with 100% on-device processing for privacy, user-in-the-loop oversight to mitigate bias, and a design that augments—never replaces—user autonomy.</p>
+                    </div>
                 </div>
             </div>
         </section>
+
+        <!-- ARPA-H Alignment Section -->
+        <section id="arpa-h" class="mb-20 md:mb-32">
+            <div class="text-center max-w-3xl mx-auto">
+                <h2 class="section-title mb-4">Answering the ARPA-H Mandate</h2>
+                <p class="section-subtitle mb-12">
+                    The Heilmeier Catechism is the cornerstone of the ARPA evaluation model. Here is how the COGGI project answers these critical questions.
+                </p>
+            </div>
+            <div class="space-y-4 max-w-4xl mx-auto">
+                <!-- Questions will be dynamically inserted here -->
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center text-gray-500 border-t pt-8">
+            <p>A Proposal by Capgemini Government Solutions</p>
+            <p class="text-sm mt-1">Project: COGGI (Cognitive-Oriented Generative AI)</p>
+        </footer>
 
     </main>
 
-    <footer class="bg-slate-800 text-white mt-16">
-        <div class="container mx-auto px-4 lg:px-6 py-8 text-center">
-            <p>&copy; 2025 Capgemini Government Solutions. All rights reserved.</p>
-            <p class="text-sm text-slate-400 mt-2">This interactive brief was generated based on the ARPA-H SBIR/STTR Solicitation 47QFCA24R0036.</p>
-        </div>
-    </footer>
-
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Mobile Menu Toggle
-            const menuBtn = document.getElementById('menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
-            menuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-            });
+        document.addEventListener('DOMContentLoaded', function() {
 
-            // Smooth Scrolling & Active Nav Link
-            const navLinks = document.querySelectorAll('.nav-link');
-            const sections = document.querySelectorAll('section');
-
-            navLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetId = e.currentTarget.getAttribute('href');
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        window.scrollTo({
-                            top: targetElement.offsetTop - 80,
-                            behavior: 'smooth'
-                        });
-                    }
-                    if (mobileMenu.classList.contains('hidden') === false) {
-                        mobileMenu.classList.add('hidden');
-                    }
-                });
-            });
-
-            window.addEventListener('scroll', () => {
-                let current = '';
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    if (pageYOffset >= sectionTop - 90) {
-                        current = '#' + section.getAttribute('id');
-                    }
-                });
-
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === current) {
-                        link.classList.add('active');
-                    }
-                });
-            });
-
-            // DToU Interactive Cards
-            const dtouCards = document.querySelectorAll('.dtou-card');
-            const dtouInfo = document.getElementById('dtou-info');
-            dtouCards.forEach(card => {
-                card.addEventListener('click', () => {
-                    const infoText = card.getAttribute('data-info');
-                    dtouInfo.querySelector('p').textContent = infoText;
-                    
-                    dtouCards.forEach(c => c.classList.remove('bg-blue-50', 'ring-2', 'ring-blue-500'));
-                    card.classList.add('bg-blue-50', 'ring-2', 'ring-blue-500');
-                });
-            });
-
-            // Chart.js Implementations
-            const defaultChartOptions = {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        enabled: true,
-                        backgroundColor: '#1E293B',
-                        titleColor: '#F8F7F4',
-                        bodyColor: '#CBD5E1',
-                        boxPadding: 8,
-                        cornerRadius: 4,
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: '#e2e8f0'
-                        },
-                        ticks: {
-                           color: '#475569'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        },
-                         ticks: {
-                           color: '#475569'
-                        }
-                    }
+            const comparisonData = {
+                features: [
+                    { id: 'tech', name: 'Core Technology' },
+                    { id: 'personalization', name: 'Personalization' },
+                    { id: 'emotion', name: 'Emotional Expression' },
+                    { id: 'context', name: 'Context Awareness' },
+                    { id: 'speed', name: 'Communication Speed' },
+                    { id: 'autonomy', name: 'User Autonomy' },
+                ],
+                tools: {
+                    proloquo: { name: 'Proloquo2Go', tech: 'Symbol-based grid with static vocabulary folders.', personalization: 'Manual editing of buttons and folders; high user/caregiver burden.', emotion: 'Static icons and pre-set voice intonations; non-generative.', context: 'None; user must manually navigate to context-relevant vocabulary.', speed: 'Slow; limited by navigation speed and multiple button presses per word.', autonomy: 'Limited; dependent on others to program new or fringe vocabulary.' },
+                    lamp: { name: 'LAMP Words for Life', tech: 'Symbol-based grid with fixed motor planning.', personalization: 'Limited customization to maintain fixed motor patterns.', emotion: 'Limited to basic emotion icon vocabulary.', context: 'None; relies on user memory of motor patterns.', speed: 'Potentially faster for experts but with a steep learning curve.', autonomy: 'High once learned, but constrained by the pre-set vocabulary.' },
+                    touchchat: { name: 'TouchChat', tech: 'Symbol-based grid with multiple vocabulary options.', personalization: 'Manual editing and vocabulary selection.', emotion: 'Limited to basic emotion icon vocabulary.', context: 'None; manual navigation required.', speed: 'Slow; limited by navigation speed.', autonomy: 'Limited; dependent on programming by others.' },
+                    coggi: { name: 'COGGI (Proposed)', tech: 'Personalized, on-device Large Language Model (LLM).', personalization: 'Adaptive fine-tuning to learn user\'s unique linguistic style, syntax, and humor.', emotion: 'Generative emotional expression via fine-tuned LLM, aligning with user\'s unique affective style.', context: 'Dynamic; uses on-device sensors and conversation history to proactively suggest relevant vocabulary.', speed: 'Significantly faster; generates whole phrases and sentences for user guidance and selection.', autonomy: 'High; generative model can create novel utterances, reducing reliance on pre-programmed content.' }
                 }
             };
-            
-            // ASD Chart
-            const asdCtx = document.getElementById('asdChart').getContext('2d');
-            new Chart(asdCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Minimally Verbal or Non-Verbal', 'Develop Functional Language'],
-                    datasets: [{
-                        data: [27.5, 72.5],
-                        backgroundColor: ['#F97316', '#3B82F6'],
-                        borderColor: '#F8F7F4',
-                        borderWidth: 4,
-                        hoverOffset: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                     plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: '#475569',
-                                boxWidth: 12,
-                                padding: 20
+
+            const heilmeierData = [
+                { q: "What are you trying to do?", a: "We are building a smart communication partner on a phone or tablet that helps people with cognitive disabilities express their thoughts and feelings more easily, naturally, and with real emotion." },
+                { q: "How is it done today, and what are the limits?", a: "Today, people use apps with grids of pictures or slow typing systems. These are mentally draining, can't express nuanced emotion, and are often so frustrating that people give up on them. They help people ask for things, but they don't help them have real conversations." },
+                { q: "What is new in your approach?", a: "We are using a small, powerful AI that runs directly on the device. It learns the user's personal communication style and emotional patterns. It will be successful because it makes communication faster, less frustrating, and more authentic by generating suggestions that sound and feel like the user." },
+                { q: "Who cares? If successful, what difference will it make?", a: "Millions of Americans with cognitive disabilities, their families, and their caregivers care. Success means reducing social isolation, improving mental health, increasing independence, and enabling people to maintain relationships and participate more fully in society. It will transform a person's quality of life." },
+                { q: "What are the risks?", a: "The primary technical risks are integrating three advanced AI systems (personalization, emotion, context) into a seamless mobile platform and ensuring the on-device LLM performs efficiently. The primary adoption risk is ensuring the AI's suggestions feel truly authentic to the user, which we will mitigate through our deep co-design process." },
+                { q: "How will equitable access be addressed?", a: "The software will run on standard consumer smartphones/tablets, avoiding expensive dedicated hardware. We will pursue insurance reimbursement pathways. The user-centered design process will ensure the interface is adaptable to various physical and cognitive needs." }
+            ];
+
+            function initDepressionChart() {
+                const ctx = document.getElementById('depressionChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Individuals with Aphasia'],
+                        datasets: [{
+                            label: 'Experience Symptoms of Depression',
+                            data: [45],
+                            backgroundColor: 'rgba(208, 169, 143, 0.6)',
+                            borderColor: 'rgba(208, 169, 143, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%'
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
                             }
                         },
-                        tooltip: defaultChartOptions.plugins.tooltip
-                    },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `~${context.raw}% experience symptoms of depression.`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function initComparisonTool() {
+                const buttonsContainer = document.getElementById('comparison-buttons');
+                const cardsContainer = document.getElementById('comparison-cards');
+                let activeFeature = 'tech';
+
+                function renderButtons() {
+                    buttonsContainer.innerHTML = '';
+                    comparisonData.features.forEach(feature => {
+                        const button = document.createElement('button');
+                        button.textContent = feature.name;
+                        button.dataset.feature = feature.id;
+                        button.className = `px-4 py-2 text-sm font-medium rounded-full transition-colors duration-200 ${feature.id === activeFeature ? 'bg-accent text-white' : 'bg-secondary hover:bg-gray-200'}`;
+                        button.addEventListener('click', () => {
+                            activeFeature = feature.id;
+                            renderButtons();
+                            renderCards();
+                        });
+                        buttonsContainer.appendChild(button);
+                    });
                 }
-            });
 
-            // Speed Chart
-            const speedCtx = document.getElementById('speedChart').getContext('2d');
-            new Chart(speedCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Typical AAC System', 'Natural Speech'],
-                    datasets: [{
-                        label: 'Words Per Minute',
-                        data: [7.5, 150],
-                        backgroundColor: ['#F59E0B', '#10B981'],
-                        borderRadius: 4
-                    }]
-                },
-                options: defaultChartOptions
-            });
+                function renderCards() {
+                    cardsContainer.innerHTML = '';
+                    Object.values(comparisonData.tools).forEach(tool => {
+                        const isCoggi = tool.name.includes('COGGI');
+                        const card = document.createElement('div');
+                        card.className = `p-6 rounded-lg transition-all duration-300 ${isCoggi ? 'bg-warm-accent/20 border-2 border-warm-accent shadow-lg' : 'bg-secondary shadow-sm'}`;
+                        card.innerHTML = `
+                            <h4 class="font-bold text-lg mb-2 ${isCoggi ? 'text-warm-accent' : ''}">${tool.name}</h4>
+                            <p class="text-sm text-gray-700">${tool[activeFeature]}</p>
+                        `;
+                        cardsContainer.appendChild(card);
+                    });
+                }
 
-            // Market Growth Chart
-            const marketCtx = document.getElementById('marketGrowthChart').getContext('2d');
-            new Chart(marketCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['2024', '2032'],
-                    datasets: [{
-                        label: 'Global AAC Market Size ($B)',
-                        data: [2, 5.23],
-                        backgroundColor: ['#6366F1', '#818CF8'],
-                        borderRadius: 4
-                    }]
-                },
-                options: defaultChartOptions
-            });
+                renderButtons();
+                renderCards();
+            }
+
+            function initHeilmeierAccordion() {
+                const container = document.querySelector('#arpa-h .space-y-4');
+                container.innerHTML = '';
+                heilmeierData.forEach((item, index) => {
+                    const detail = document.createElement('details');
+                    detail.className = 'bg-secondary rounded-lg shadow-sm overflow-hidden';
+                    if (index === 0) detail.open = true;
+
+                    detail.innerHTML = `
+                        <summary class="flex justify-between items-center p-5 cursor-pointer hover:bg-gray-50">
+                            <span class="font-bold text-lg">${item.q}</span>
+                            <span class="arrow-down text-accent transition-transform duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                            </span>
+                        </summary>
+                        <div class="p-5 border-t border-gray-200">
+                            <p class="text-gray-700">${item.a}</p>
+                        </div>
+                    `;
+                    container.appendChild(detail);
+                });
+            }
+
+            initDepressionChart();
+            initComparisonTool();
+            initHeilmeierAccordion();
         });
     </script>
 </body>
